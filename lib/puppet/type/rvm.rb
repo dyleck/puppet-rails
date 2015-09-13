@@ -1,6 +1,6 @@
 require "puppet/parameter/boolean"
 
-Puppet::Type.newtype(:system_rvm) do
+Puppet::Type.newtype(:rvm) do
 
 	ensurable
 
