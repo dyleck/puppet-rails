@@ -5,7 +5,11 @@ module PuppetX
 	@f = nil
 
 	def initialize(fname)
-	  @f = File.open(fname,'a')
+          begin
+	    @f = File.open(fname,'a')
+          rescue Exception => e
+            $stderr.puts "Cannot write to log file #{fname}, because of #{e.class}"
+          end
 	end
 
 	def log(message)
