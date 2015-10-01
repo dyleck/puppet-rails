@@ -16,7 +16,7 @@ Puppet::Type.type(:rvm).provide(:posix) do
 					flog.log "Destoying existin rvm."
 					self.destroy
 				else
-					raise Puppet::Error, "Newer version of RVM is already installed. Set downgrade to true in resource definition."
+					raise Puppet::Error, "Newer version of RVM is already installed. Set rvm_downgrade to true in resource definition."
 				end
 			end
 			flog.log "Installing version #{@resource[:version]}."
@@ -31,7 +31,19 @@ Puppet::Type.type(:rvm).provide(:posix) do
 	def exists?
 		flog = PuppetX::Dyleck::Util::Logger.new('/tmp/puppet.log')
 		flog.log("exists? entry")
-		retval = @resource[:version] == _rvm_version
+		flog.log("Version to check: #{@resource[:version]}")
+		if !@resource[:version] or @resource[:version] == 'any'
+			flog.log("Looking for any")
+			if File.exist?('/usr/local/rvm/bin/rvm')
+				flog.log("RVM found")
+				retval = true
+			else
+				flog.log("RVM not found")
+				retval = false
+			end
+		else
+			retval = @resource[:version] == _rvm_version
+		end
 		flog.log("exists? exit: #{retval}")
 		retval
 	end
